@@ -174,7 +174,7 @@ class VOCDetection(Dataset):
         for iou in IouTh:
             prec, rec, mAP = self._do_python_eval(output_dir, iou)
             precision.append(prec)
-            recall.append(recall)
+            recall.append(rec)
             mAPs.append(mAP)
 
         print("--------------------------------------------------------------")
@@ -183,7 +183,7 @@ class VOCDetection(Dataset):
         print("map_50:", mAPs[0])
         print("map_5095:", np.mean(mAPs))
         print("--------------------------------------------------------------")
-        return np.mean(mAPs), mAPs[0]
+        return recall[0], precision[0], np.mean(mAPs), mAPs[0]
 
     def _get_voc_results_file_template(self):
         filename = "comp4_det_test" + "_{:s}.txt"

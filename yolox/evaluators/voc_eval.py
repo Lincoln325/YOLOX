@@ -182,4 +182,8 @@ def voc_eval(
     prec = tp / np.maximum(tp + fp, np.finfo(np.float64).eps)
     ap = voc_ap(rec, prec, use_07_metric)
 
-    return rec, prec, ap
+    # F1 (Harmonic mean of precision and recall)
+    f1 = 2*prec*rec/(prec+rec+1e-16)
+    i = f1.mean(0).argmax()
+
+    return rec[:,i], prec[:,i], ap

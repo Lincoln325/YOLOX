@@ -203,7 +203,7 @@ class VOCEvaluator:
             sys.stdout.flush()
 
         with tempfile.TemporaryDirectory() as tempdir:
-            mAP50, mAP70 = self.dataloader.dataset.evaluate_detections(
+            recall, precision, mAP50, mAP70 = self.dataloader.dataset.evaluate_detections(
                 all_boxes, tempdir
             )
-            return mAP50, mAP70, info
+            return recall, precision, mAP50, mAP70, info
