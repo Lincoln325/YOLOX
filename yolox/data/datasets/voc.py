@@ -168,14 +168,20 @@ class VOCDetection(Dataset):
         """
         self._write_voc_results_file(all_boxes)
         IouTh = np.linspace(0.5, 0.95, int(np.round((0.95 - 0.5) / 0.05)) + 1, endpoint=True)
+        precision = []
+        recall = []
         mAPs = []
         for iou in IouTh:
-            mAP = self._do_python_eval(output_dir, iou)
+            prec, rec, mAP = self._do_python_eval(output_dir, iou)
+            precision.append(prec)
+            recall.append(recall)
             mAPs.append(mAP)
 
         print("--------------------------------------------------------------")
-        print("map_5095:", np.mean(mAPs))
+        print("precision_50:", precision[0])
+        print("recall_50:", recall[0])
         print("map_50:", mAPs[0])
+        print("map_5095:", np.mean(mAPs))
         print("--------------------------------------------------------------")
         return np.mean(mAPs), mAPs[0]
 
@@ -245,6 +251,8 @@ class VOCDetection(Dataset):
             )
             aps += [ap]
             if iou == 0.5:
+                print("Precision for {} = {:.4f}".format(cls, prec))
+                print("Recall for {} = {:.4f}".format(cls, rec))
                 print("AP for {} = {:.4f}".format(cls, ap))
             if output_dir is not None:
                 with open(os.path.join(output_dir, cls + "_pr.pkl"), "wb") as f:
@@ -265,4 +273,4 @@ class VOCDetection(Dataset):
             print("-- Thanks, The Management")
             print("--------------------------------------------------------------")
 
-        return np.mean(aps)
+        return prec, rec, np.mean(aps)
