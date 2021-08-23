@@ -82,7 +82,7 @@ class Exp(MyExp):
 
         valdataset = VOCDetection(
             data_dir=os.path.join(get_yolox_datadir(), "VOCdevkit"),
-            image_sets=[('2007', 'test')],
+            image_sets=[('2007', 'val')],
             img_size=self.test_size,
             preproc=ValTransform(
                 rgb_means=(0.485, 0.456, 0.406),

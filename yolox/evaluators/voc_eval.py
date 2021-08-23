@@ -76,6 +76,7 @@ def voc_eval(
     cachedir,
     ovthresh=0.5,
     use_07_metric=False,
+    iou = 0.5
 ):
     # first load gt
     if not os.path.isdir(cachedir):
@@ -184,6 +185,24 @@ def voc_eval(
 
     # F1 (Harmonic mean of precision and recall)
     f1 = 2*prec*rec/(prec+rec+1e-16)
-    i = f1.mean(0).argmax()
+    i = f1.argmax()
 
-    return rec[:,i], prec[:,i], ap
+    px = rec
+    py = prec
+    fname='precision-recall_curve.png'
+    plot = True
+    
+    if iou == 0.5 and plot:
+        # py = np.stack(py)
+        fig, ax = plt.subplots(1, 1, figsize=(5, 5))
+        ax.plot(px, py, linewidth=0.5, color='grey')  # plot(recall, precision)
+        ax.plot(px, py, linewidth=2, color='blue', label='all classes %.3f mAP@0.5' % ap)
+        ax.set_xlabel('Recall')
+        ax.set_ylabel('Precision')
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        plt.legend()
+        fig.tight_layout()
+        fig.savefig(fname, dpi=200)
+    
+    return rec[i], prec[i], ap

@@ -248,6 +248,7 @@ class VOCDetection(Dataset):
                 cachedir,
                 ovthresh=iou,
                 use_07_metric=use_07_metric,
+                iou = iou
             )
             aps += [ap]
             if iou == 0.5:
